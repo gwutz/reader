@@ -195,6 +195,7 @@ rss_parser_parse (RssParser *self, mrss_t *mrss)
 			              "title",             item->title,
 			              "link",              item->link,
 			              "description",       item->description,
+			              "content",           item->content,
 			              "copyright",         item->copyright,
 			              "author",            item->author,
 			              "author-uri",        item->author_uri,

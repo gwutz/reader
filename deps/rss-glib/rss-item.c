@@ -40,6 +40,7 @@ enum {
 	PROP_TITLE,
 	PROP_LINK,
 	PROP_DESCRIPTION,
+	PROP_CONTENT,
 	PROP_COPYRIGHT,
 	PROP_AUTHOR,
 	PROP_AUTHOR_URI,
@@ -80,6 +81,9 @@ rss_item_get_property (GObject    *object,
 	case PROP_DESCRIPTION:
 		g_value_set_string (value, priv->description);
 		break;
+	case PROP_CONTENT:
+	    g_value_set_string (value, priv->content);
+	    break;
 	case PROP_COPYRIGHT:
 		g_value_set_string (value, priv->copyright);
 		break;
@@ -151,6 +155,10 @@ rss_item_set_property (GObject      *object,
 		g_free (priv->description);
 		priv->description = g_value_dup_string (value);
 		break;
+	case PROP_CONTENT:
+	    g_free (priv->content);
+	    priv->content = g_value_dup_string (value);
+	    break;
 	case PROP_COPYRIGHT:
 		g_free (priv->copyright);
 		priv->copyright = g_value_dup_string (value);
@@ -214,6 +222,7 @@ rss_item_finalize (GObject *object)
 	g_free (priv->title);
 	g_free (priv->link);
 	g_free (priv->description);
+	g_free (priv->content);
 	g_free (priv->copyright);
 	g_free (priv->author);
 	g_free (priv->author_uri);
@@ -316,6 +325,21 @@ rss_item_class_init (RssItemClass *klass)
 	                             G_PARAM_READWRITE);
 	g_object_class_install_property (gobject_class,
                                      PROP_DESCRIPTION,
+                                     pspec);
+                                     
+    /**
+	 * RssItem:content:
+	 *
+	 * The content of the item.  This is in atom feeds often where the actual
+	 * content for the item is stored.
+	 */
+	pspec = g_param_spec_string ("content",
+	                             "Content",
+	                             "Content of the item",
+	                             NULL,
+	                             G_PARAM_READWRITE);
+	g_object_class_install_property (gobject_class,
+                                     PROP_CONTENT,
                                      pspec);
 
 	/**
@@ -610,6 +634,23 @@ rss_item_get_description (RssItem *self)
 	g_return_val_if_fail (RSS_IS_ITEM (self), NULL);
 
 	return self->priv->description;
+}
+
+/**
+ * rss_item_get_content:
+ * @self: a #RssItem
+ *
+ * Retrieves the #RssItem:content field.
+ *
+ * Return value: the value of the field. The returned string is
+ *   owned by the #RssItem and should never be modified or freed.
+ */
+const gchar *
+rss_item_get_content (RssItem *self)
+{
+	g_return_val_if_fail (RSS_IS_ITEM (self), NULL);
+
+	return self->priv->content;
 }
 
 /**

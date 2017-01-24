@@ -28,6 +28,7 @@ struct _RssItemPrivate {
 	gchar *title;
 	gchar *link;
 	gchar *description;
+	gchar *content;
 	gchar *copyright;
 	gchar *author;
 	gchar *author_uri;

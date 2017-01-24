@@ -95,6 +95,8 @@ namespace Rss {
 		[NoAccessorMethod]
 		public string description { owned get; set; }
 		[NoAccessorMethod]
+		public string content { owned get; set; }
+		[NoAccessorMethod]
 		public string copyright{ owned get; set; }
 		[NoAccessorMethod]
 		public string author { owned get; set; }

@@ -2,6 +2,8 @@ set(READER_SRC
     Reader.vala
     ReaderWindow.vala
     ReaderHeaderBar.vala
+    ReaderWelcome.vala
+    ReaderContent.vala
 
     ReaderController.vala
     ReaderDataManager.vala

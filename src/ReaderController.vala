@@ -32,7 +32,7 @@ namespace Reader {
 
         public void show_error (string message) {
             var window = Reader.Application.instance.get_main_window ();
-            Gtk.InfoBar info_bar = window.info_bar;
+            Gtk.InfoBar info_bar = window.content.info_bar;
             // normally a show is enough but there is a really nasty bug 
             // and the only workaround at the moment is detach/attach 
             // together with hide/show
@@ -46,10 +46,12 @@ namespace Reader {
             info_bar.show_all();
         }
 
-        public Rss.Item get_rss_item(int nr) {
-            print("items %d\n", manager.documents.size);
+        public Rss.Item? get_rss_item(string guid) {
             var doc = manager.documents.get(0);
-            return doc.get_items().nth_data(nr);
+            foreach(Rss.Item i in doc.get_items()) {
+                if (i.guid == guid) return i;
+            }
+            return null;
         }
     }
 

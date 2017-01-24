@@ -360,9 +360,9 @@ __mrss_parser_atom_entry (nxml_t * doc, nxml_data_t * cur, mrss_t * data)
 	    item->link = c;
 
 	  /* content -> description */
-	  else if (!item->description && !strcmp (cur->value, "content"))
-	    __mrss_parser_atom_string (doc, cur, &item->description,
-				       &item->description_type);
+	  else if (!item->content && !strcmp (cur->value, "content"))
+	    __mrss_parser_atom_string (doc, cur, &item->content,
+				       &item->content_type);
 
 	  /* summary -> description */
 	  else if (!item->description && !strcmp (cur->value, "summary"))

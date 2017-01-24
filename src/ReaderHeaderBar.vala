@@ -4,6 +4,7 @@ namespace Reader {
     public class HeaderBar : Gtk.HeaderBar {
         private Gtk.Entry url_entry;
         private Gtk.Button url_entry_enter;
+        public  Gtk.Popover add_pop;
 
         public HeaderBar () {
             this.get_style_context ().add_class ("primary-toolbar");
@@ -14,7 +15,7 @@ namespace Reader {
             Gtk.ToolButton add = new Gtk.ToolButton (add_img, 
                                                 "Neues Abonnement...");
             this.pack_start (add);
-            Gtk.Popover add_pop = new Gtk.Popover(add);
+            add_pop = new Gtk.Popover (add);
             add_pop.set_position (Gtk.PositionType.BOTTOM);
 
             Gtk.Box popbox = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 10);
@@ -22,6 +23,7 @@ namespace Reader {
             add_pop.add(popbox);
 
             url_entry = new Gtk.Entry ();
+            url_entry.width_request = 250;
             url_entry.get_buffer().inserted_text.connect((pos, str, len) => {
                 if(url_entry.get_text_length() > 0) {
                     url_entry_enter.set_action_target_value(
@@ -55,6 +57,8 @@ namespace Reader {
             refresh.set_action_target_value(new Variant.string("Refresh Not implemented"));
 
             Gtk.Menu menu = new Gtk.Menu ();
+            Gtk.MenuItem import_opml = new Gtk.MenuItem.with_label("Import OPML File");
+            menu.add(import_opml);
             Granite.Widgets.AppMenu appmenu = new Granite.Widgets.AppMenu (menu);
             this.pack_end (appmenu);
 
