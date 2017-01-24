@@ -33,8 +33,8 @@ namespace Reader {
         public void show_error (string message) {
             var window = Reader.Application.instance.get_main_window ();
             Gtk.InfoBar info_bar = window.content.info_bar;
-            // normally a show is enough but there is a really nasty bug 
-            // and the only workaround at the moment is detach/attach 
+            // normally a show is enough but there is a really nasty bug
+            // and the only workaround at the moment is detach/attach
             // together with hide/show
             var content = window.content;
             content.pack_start (info_bar, false, false, 0);

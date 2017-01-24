@@ -15,9 +15,8 @@ namespace Reader {
         }
 
         public Reader.Controller controller {
-            get; 
-            private set; 
-            default = new Reader.Controller ();
+            get;
+            private set;
         }
 
         private Unity.LauncherEntry? entry = null;
@@ -26,10 +25,12 @@ namespace Reader {
             Object(application_id: "org.pantheon.reader",
                    flags: ApplicationFlags.FLAGS_NONE);
             _instance = this;
-            controller.add_actions();
         }
 
         protected override void activate () {
+        	controller = new Reader.Controller ();
+            controller.add_actions();
+
             ReaderWindow window = new ReaderWindow (this);
             this.add_window(window);
             this.main_app_window = window.get_id();

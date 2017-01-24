@@ -2,17 +2,10 @@
 namespace Reader {
 
     public class ReaderWindow : Gtk.ApplicationWindow {
-    
+
         public Reader.HeaderBar headerbar;
         private Reader.Welcome  welcome;
         public Reader.Content  content;
-
-        /*public Gtk.InfoBar      info_bar;
-        public Gtk.Box          content;
-        public WebKit.WebView   webview;
-
-        private Gtk.TreeStore   sidebar;
-        private Gtk.ListStore   items;*/
 
         public ReaderWindow(Gtk.Application app) {
             Object (application: app);
@@ -77,7 +70,7 @@ namespace Reader {
             Gtk.Paned pane2 = new Gtk.Paned (Gtk.Orientation.VERTICAL);
             pane2.set_position(150);
             pane.add2 (pane2);
-            
+
             var scrolllist = new Gtk.ScrolledWindow(null, null);
             var list = new Gtk.TreeView ();
             items = new Gtk.ListStore(1, typeof(string));

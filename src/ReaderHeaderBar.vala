@@ -1,6 +1,7 @@
+using Gtk;
 
 namespace Reader {
-    
+
     public class HeaderBar : Gtk.HeaderBar {
         private Gtk.Entry url_entry;
         private Gtk.Button url_entry_enter;
@@ -12,7 +13,7 @@ namespace Reader {
 
             Gtk.Image add_img = new Gtk.Image.from_icon_name ("list-add",
                                                 Gtk.IconSize.LARGE_TOOLBAR);
-            Gtk.ToolButton add = new Gtk.ToolButton (add_img, 
+            Gtk.ToolButton add = new Gtk.ToolButton (add_img,
                                                 "Neues Abonnement...");
             this.pack_start (add);
             add_pop = new Gtk.Popover (add);
@@ -34,6 +35,7 @@ namespace Reader {
 
             url_entry_enter = new Gtk.Button.with_label ("Add Feed...");
             url_entry_enter.set_action_name("app." + Reader.READER_ADD_URL);
+            url_entry_enter.set_action_target_value (new Variant.string(""));
             url_entry_enter.clicked.connect(() => {
                 url_entry_enter.set_action_target_value(
                     new Variant.string(url_entry.get_text()));
@@ -83,8 +85,5 @@ namespace Reader {
             r_search.add (search);
             this.pack_end (r_search);
         }
-
-
     }
-
 }

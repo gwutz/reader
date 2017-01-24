@@ -2,15 +2,16 @@
 namespace Reader {
     public class DataManager : Object {
 
-        private Rss.Parser parser {get; private set; default = new Rss.Parser();}
+        private Rss.Parser parser {get; private set; default = new Rss.Parser(); }
+        private Reader.DataBase db {get; private set; default = new Reader.DataBase(); }
 
         public DataManager() {
         }
 
         public Gee.List<Rss.Document> documents {
-            get; 
+            get;
             set;
-            default = new Gee.ArrayList<Rss.Document>(); 
+            default = new Gee.ArrayList<Rss.Document>();
         }
 
         public BackgroundJob add_url (string url) {
