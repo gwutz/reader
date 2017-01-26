@@ -23,6 +23,16 @@ namespace Reader.Engine {
         public string title { get; set; }
         public string content { get; set; }
         public string pub_date { get; set; }
+        public DateTime date {
+            owned get {
+                var locale = Intl.setlocale ();
+                Intl.setlocale (LocaleCategory.TIME, "C");
+                Time t = Time();
+                t.strptime(pub_date, "%a, %d %b %Y %H:%M:%S +0000");
+                Intl.setlocale (LocaleCategory.TIME, locale);
+                return new DateTime.local (1900 + t.year, 1 + t.month, t.day, t.hour, t.minute, (double)t.second);
+            }
+        }
 
         public string to_string() {
             return "Item [id=%s, title=%s]".printf(id, title);

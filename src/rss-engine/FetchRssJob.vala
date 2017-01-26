@@ -73,7 +73,11 @@ namespace Reader.Engine {
                     i.content = item.description;
                 }
                 if (item.pub_date == null) {
-                    i.pub_date = new DateTime.now_local ().to_string ();
+                    //Sun, 07 Jan 2017 18:48:00 +0000
+                    var locale = Intl.setlocale ();
+                    Intl.setlocale (LocaleCategory.TIME, "C");
+                    i.pub_date = new DateTime.now_local ().format ("%a, %d %b %Y %H:%M:%S +0000");
+                    Intl.setlocale (LocaleCategory.TIME, locale);
                 } else {
                     i.pub_date = item.pub_date;
                 }

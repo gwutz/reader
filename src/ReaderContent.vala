@@ -153,7 +153,8 @@ namespace Reader {
             Gtk.TreeIter root;
             foreach(Reader.Engine.Item item in sub.items) {
                 items.append(out root);
-                items.set(root, 0, item.pub_date, 1, item.title, 2, item.id);
+                string date = item.date.format ("%d.%m %H:%M");
+                items.set(root, 0, date, 1, item.title, 2, item.id);
             }
             populate_web_view(sub.items.first().data);
         }
