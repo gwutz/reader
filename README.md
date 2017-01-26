@@ -3,7 +3,7 @@ Reader is a RSS Feed Reader
 
 ![](media/welcome.png)
 
-1[](media/action.png)
+![](media/action.png)
 
 Designed to be a modern alternative to liferea or similiar desktop feedreaders.
 Together with the new HeaderBar design from GNOME and simplicity in mind i
