@@ -1,3 +1,20 @@
+/* ReaderContent.vala
+ *
+ * Copyright (C) 2017 Guenther Wutz <info@gunibert.de>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace Reader {
 
@@ -9,6 +26,8 @@ namespace Reader {
         private Gtk.TreeStore   sidebar;
         private Gtk.ListStore   items;
         
+        private bool first_sidebar_item = true;
+
         public Content () {
             Object(orientation: Gtk.Orientation.VERTICAL, spacing: 0);
             
@@ -27,9 +46,18 @@ namespace Reader {
             var tree = new Gtk.TreeView ();
             tree.get_style_context ().add_class ("sidebar");
 
-            sidebar = new Gtk.TreeStore(2, typeof(string), typeof(Gdk.Pixbuf));
+            sidebar = new Gtk.TreeStore(3, typeof(string), typeof(Gdk.Pixbuf), typeof(string));
             tree.set_model(sidebar);
             tree.set_headers_visible(false);
+            tree.activate_on_single_click = true;
+            tree.row_activated.connect ((path, column) => {
+                Gtk.TreeIter iter_sub;
+                sidebar.get_iter(out iter_sub, path);
+                string id;
+                sidebar.get(iter_sub, 2, out id, -1);
+                var sub = Reader.Application.instance.controller.get_subscription (id);
+                populate_items (sub);
+            });
             var pixbufrenderer = new Gtk.CellRendererPixbuf ();
             tree.insert_column_with_attributes(-1, "Icon",
                                                pixbufrenderer,
@@ -56,9 +84,9 @@ namespace Reader {
             list.row_activated.connect((path, column) => {
                 Gtk.TreeIter iter_item;
                 items.get_iter(out iter_item, path);
-                string guid;
-                items.get(iter_item, 2, out guid, -1);
-                var item = Reader.Application.instance.controller.get_rss_item(guid);
+                string id;
+                items.get(iter_item, 2, out id, -1);
+                var item = Reader.Application.instance.controller.get_item(id);
                 populate_web_view(item);
             });
             list.insert_column_with_attributes (-1, "Date", cellrenderer,
@@ -92,35 +120,46 @@ namespace Reader {
                 return false;
             });
             pane2.add2(webview);
+
+            // add signals
+            Reader.Engine.Fetcher.instance.new_subscription.connect (add_subscription);
+
+            var subscriptions = Reader.Engine.Fetcher.instance.get_subscriptions ();
+            foreach (Reader.Engine.Subscription sub in subscriptions) {
+                add_subscription (sub);
+            }
+            if (subscriptions.first () != null)
+                populate_items (subscriptions.first ().data);
         }
-        
-        public void add_rss_document (Rss.Document doc) {
+
+        public void add_subscription (Reader.Engine.Subscription sub) {
             Gtk.TreeIter root;
             sidebar.append(out root, null);
-            File icon = File.new_for_uri(doc.image_url);
+            File icon = File.new_for_uri(sub.image_url);
             var stream = icon.read();
             var pixbuf = new Gdk.Pixbuf.from_stream(stream);
             if(pixbuf.width > 16) {
                 pixbuf = pixbuf.scale_simple(16, 16, Gdk.InterpType.BILINEAR);
             }
-            sidebar.set(root, 0, doc.title, 1, pixbuf);
-            populate_rss_items(doc);
-        }
-
-        public void populate_rss_items (Rss.Document doc) {
-            Gtk.TreeIter root;
-            foreach(Rss.Item item in doc.get_items()) {
-                items.append(out root);
-                items.set(root, 0, item.pub_date, 1, item.title, 2, item.guid);
+            sidebar.set(root, 0, sub.title, 1, pixbuf, 2, sub.link);
+            if (first_sidebar_item) {
+                first_sidebar_item = false;
+                populate_items (sub);
             }
-            populate_web_view(doc.get_items().first().data);
         }
 
-        public void populate_web_view (Rss.Item item) {
-            string content;
-            if (item.content != null) content = item.content;
-            else content = item.description;
-            webview.load_html(@"<html><head><style>h1 {font-size: 32px;font-weight: 300;text-align: center;}</style></head><body><h1>%s</h1>%s</body></html>".printf(item.title, content), null);
+        public void populate_items (Reader.Engine.Subscription sub) {
+            items.clear ();
+            Gtk.TreeIter root;
+            foreach(Reader.Engine.Item item in sub.items) {
+                items.append(out root);
+                items.set(root, 0, item.pub_date, 1, item.title, 2, item.id);
+            }
+            populate_web_view(sub.items.first().data);
+        }
+
+        public void populate_web_view (Reader.Engine.Item item) {
+            webview.load_html(@"<html><head><style>h1 {font-size: 32px;font-weight: 300;text-align: center;}</style></head><body><h1>%s</h1>%s</body></html>".printf(item.title, item.content), null);
         }
     }
 }

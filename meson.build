@@ -6,11 +6,12 @@ project('reader', ['vala', 'c'],
 glib = dependency('glib-2.0')
 gobject = dependency('gobject-2.0')
 gtk = dependency('gtk+-3.0')
-granite = dependency('granite')
+gee = dependency('gee-0.8')
 unity = dependency('unity')
 webkit = dependency('webkit2gtk-4.0')
 curl = dependency('libcurl')
 sqlite = dependency('sqlite3')
+soup = dependency('libsoup-2.4')
 
 subdir('deps')
 subdir('src')

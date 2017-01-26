@@ -18,7 +18,7 @@
 
 namespace Reader {
 
-    public class Application : Granite.Application {
+    public class Application : Gtk.Application {
 
         private uint main_app_window = 0;
 

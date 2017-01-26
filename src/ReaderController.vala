@@ -1,17 +1,31 @@
+/* ReaderController.vala
+ *
+ * Copyright (C) 2017 Guenther Wutz <info@gunibert.de>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 namespace Reader {
     public const string READER_ERROR = "ReaderShowError";
     public const string READER_ADD_URL = "ReaderAddUrl";
 
     public class Controller : Object {
-        private Reader.DataManager manager {get; set;}
-        private Reader.Workerpool pool {get; set; default = new Reader.Workerpool();}
+        private Reader.Engine.Fetcher fetcher { get; set; default = new Reader.Engine.Fetcher (); }
 
         public Controller () {
-            this.manager = new Reader.DataManager();
+            fetcher.engine_error.connect (show_error);
         }
-
-        public signal void added_feed(Rss.Document doc);
 
         public void add_actions () {
             var show_error = new SimpleAction(READER_ERROR,
@@ -22,8 +36,7 @@ namespace Reader {
 
             var add_url = new SimpleAction(READER_ADD_URL, VariantType.STRING);
             add_url.activate.connect ((val) => {
-                var job = manager.add_url(val.get_string());
-                pool.enqueue(job);
+            	fetcher.add_subscription (val.get_string ());
             });
 
             Reader.Application.instance.add_action(show_error);
@@ -46,12 +59,12 @@ namespace Reader {
             info_bar.show_all();
         }
 
-        public Rss.Item? get_rss_item(string guid) {
-            var doc = manager.documents.get(0);
-            foreach(Rss.Item i in doc.get_items()) {
-                if (i.guid == guid) return i;
-            }
-            return null;
+        public Reader.Engine.Item? get_item (string id) {
+            return Reader.Engine.Fetcher.instance.get_item (id);
+        }
+
+        public Reader.Engine.Subscription? get_subscription (string id) {
+            return Reader.Engine.Fetcher.instance.get_subscription (id);
         }
     }
 

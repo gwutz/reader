@@ -61,8 +61,8 @@ namespace Reader {
             Gtk.Menu menu = new Gtk.Menu ();
             Gtk.MenuItem import_opml = new Gtk.MenuItem.with_label("Import OPML File");
             menu.add(import_opml);
-            Granite.Widgets.AppMenu appmenu = new Granite.Widgets.AppMenu (menu);
-            this.pack_end (appmenu);
+            //Granite.Widgets.AppMenu appmenu = new Granite.Widgets.AppMenu (menu);
+            //this.pack_end (appmenu);
 
             Gtk.Revealer r_search_btn = new Gtk.Revealer ();
             Gtk.Revealer r_search = new Gtk.Revealer ();
