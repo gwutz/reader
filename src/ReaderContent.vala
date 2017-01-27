@@ -66,8 +66,6 @@ namespace Reader {
             tree.insert_column_with_attributes(-1, "Abonnement",
                                                cellrenderer,
                                                "text", 0, null);
-
-            Gtk.TreeIter root;
             pane.add1(tree);
             tree.width_request = 200;
 

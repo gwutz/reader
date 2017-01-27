@@ -21,24 +21,13 @@ namespace Reader {
     public class ReaderWindow : Gtk.ApplicationWindow {
 
         public Reader.HeaderBar headerbar;
-        //private Reader.Welcome  welcome;
         public Reader.Content  content;
 
         public ReaderWindow (Gtk.Application app) {
             Object (application: app);
             build_header_ui ();
-            //this.welcome = new Reader.Welcome (this.headerbar);
-            //this.add (this.welcome);
             this.content = new Reader.Content ();
             this.add (content);
-        }
-
-        private void add_rss_document (Rss.Document doc) {
-            /*if (welcome.get_parent () != null) {
-                this.remove (this.welcome);
-                this.add (this.content);
-                this.content.show_all ();
-            }*/
         }
 
         private void build_header_ui () {
