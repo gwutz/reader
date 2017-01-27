@@ -22,10 +22,10 @@ namespace Reader {
     public const string READER_REFRESH = "ReaderRefresh";
 
     public class Controller : Object {
-        private Reader.Engine.Fetcher fetcher { get; set; default = new Reader.Engine.Fetcher (); }
 
         public Controller () {
-            fetcher.engine_error.connect (show_error);
+            new Reader.Engine.Fetcher ();
+            Reader.Engine.Fetcher.instance.engine_error.connect (show_error);
         }
 
         public void add_actions () {
@@ -37,12 +37,12 @@ namespace Reader {
 
             var add_url = new SimpleAction(READER_ADD_URL, VariantType.STRING);
             add_url.activate.connect ((val) => {
-            	fetcher.add_subscription (val.get_string ());
+            	Reader.Engine.Fetcher.instance.add_subscription (val.get_string ());
             });
 
             var refresh = new SimpleAction (READER_REFRESH, null);
             refresh.activate.connect (() => {
-                fetcher.refresh_manual ();
+                Reader.Engine.Fetcher.instance.refresh_manual ();
             });
 
             Reader.Application.instance.add_action(show_error);
