@@ -5,6 +5,9 @@ Reader is a RSS Feed Reader
 
 ![](media/action.png)
 
+
+![](media/action2.png)
+
 Designed to be a modern alternative to liferea or similiar desktop feedreaders.
 Together with the new HeaderBar design from GNOME and simplicity in mind i
 created this application for my own needs. Eventually i will implement online
