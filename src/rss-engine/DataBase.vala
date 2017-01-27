@@ -47,7 +47,7 @@ namespace Reader.Engine {
 		 */
 		private void create_schema () {
 			Sqlite.Statement stmt;
-			string sql = "CREATE TABLE IF NOT EXISTS subscription (link TEXT PRIMARY KEY NOT NULL, title TEXT, description TEXT, image_url TEXT);";
+			string sql = "CREATE TABLE IF NOT EXISTS subscription (link TEXT PRIMARY KEY NOT NULL, title TEXT, description TEXT, image_url TEXT, feed_url TEXT);";
 			int res = this.db.prepare_v2 (sql, -1, out stmt);
 			assert (res == Sqlite.OK);
 
@@ -70,7 +70,7 @@ namespace Reader.Engine {
 			List<Subscription> subscriptions = new List<Subscription>();
 
 			// Fetch Documents from Database
-			string sql = "SELECT link, title, description, image_url from subscription;";
+			string sql = "SELECT link, title, description, image_url, feed_url from subscription;";
 			Sqlite.Statement stmt;
 			int res = this.db.prepare_v2 (sql, -1, out stmt);
 			assert (res == Sqlite.OK);
@@ -81,6 +81,7 @@ namespace Reader.Engine {
 				sub.title = stmt.column_text (1);
 				sub.description = stmt.column_text (2);
 				sub.image_url = stmt.column_text (3);
+				sub.feed_url = stmt.column_text (4);
 
 				get_items (sub);
 				subscriptions.append (sub);
@@ -90,7 +91,7 @@ namespace Reader.Engine {
 		}
 
 		public Subscription get_subscription (string id) {
-			string sql = "SELECT link, title, description, image_url from subscription WHERE link='%s';".printf(id);
+			string sql = "SELECT link, title, description, image_url, feed_url from subscription WHERE link='%s';".printf(id);
 			Sqlite.Statement stmt;
 			int res = this.db.prepare_v2 (sql, -1, out stmt);
 			assert (res == Sqlite.OK);
@@ -101,6 +102,7 @@ namespace Reader.Engine {
 			sub.title = stmt.column_text (1);
 			sub.description = stmt.column_text (2);
 			sub.image_url = stmt.column_text (3);
+			sub.feed_url = stmt.column_text (4);
 
 			get_items (sub);
 			return sub;
@@ -146,7 +148,7 @@ namespace Reader.Engine {
 		 * in database
 		 */
 		public bool save_subscription (Subscription sub) {
-			string sql = "INSERT INTO subscription (link, title, description, image_url) VALUES (?, ?, ?, ?)";
+			string sql = "INSERT INTO subscription (link, title, description, image_url, feed_url) VALUES (?, ?, ?, ?, ?)";
 
 			Sqlite.Statement stmt;
 			int res = this.db.prepare_v2 (sql, -1, out stmt);
@@ -158,6 +160,8 @@ namespace Reader.Engine {
 			res = stmt.bind_text (3, sub.description);
 			assert (res == Sqlite.OK);
 			res = stmt.bind_text (4, sub.image_url);
+			assert (res == Sqlite.OK);
+			res = stmt.bind_text (5, sub.feed_url);
 			assert (res == Sqlite.OK);
 
 			res = stmt.step ();

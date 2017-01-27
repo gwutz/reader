@@ -24,6 +24,7 @@ namespace Reader.Engine {
         public string title { get; set; }
         public string description { get; set; }
         public string image_url { get; set; }
+        public string feed_url { get; set; }
         public List<weak Item> items {
             owned get { return _items.copy (); }
         }

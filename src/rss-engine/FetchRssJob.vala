@@ -51,6 +51,7 @@ namespace Reader.Engine {
                     }
                 }
                 subscription = convertDocument (doc);
+                subscription.feed_url = url;
             } catch (Error e) {
                 error (e.message);
             }
