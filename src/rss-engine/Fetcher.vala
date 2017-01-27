@@ -40,6 +40,7 @@ namespace Reader.Engine {
 		 * Public signals
 		 */
 		public signal void new_subscription (Subscription subscription);
+		public signal void updated_subscription (Subscription subscription);
 		public signal void engine_error (string message);
 
 		Workerpool pool { private get; private set; default = new Workerpool (); }
@@ -86,6 +87,19 @@ namespace Reader.Engine {
 			}
 		}
 
+		public void refresh_manual () {
+		    var subs = this.db.get_subscriptions ();
+		    foreach (Subscription sub in subs) {
+		        FetchRssJob job = new FetchRssJob (sub.feed_url, parser, true);
+		        pool.enqueue (job);
+		    }
+		}
 
+        public void update_subscription (Subscription subscription) {
+            foreach (Item item in subscription.items) {
+                this.db.save_item (subscription, item);
+            }
+            updated_subscription (subscription);
+        }
 	}
 }

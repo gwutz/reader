@@ -22,10 +22,12 @@ namespace Reader.Engine {
         private string url;
         private Rss.Parser parser;
         private Subscription subscription;
+        private bool refresh;
 
-        public FetchRssJob (string url, Rss.Parser parser) {
+        public FetchRssJob (string url, Rss.Parser parser, bool refresh = false) {
             this.url = url;
             this.parser = parser;
+            this.refresh = refresh;
         }
 
         public override void execute_in_background () {
@@ -89,7 +91,11 @@ namespace Reader.Engine {
         }
 
         public override void execute_in_main () {
-            Reader.Engine.Fetcher.instance.save_new_subscription (subscription);
+            if (!refresh) {
+                Reader.Engine.Fetcher.instance.save_new_subscription (subscription);
+            } else {
+                Reader.Engine.Fetcher.instance.update_subscription (subscription);
+            }
         }
 	}
 }

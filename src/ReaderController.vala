@@ -19,6 +19,7 @@
 namespace Reader {
     public const string READER_ERROR = "ReaderShowError";
     public const string READER_ADD_URL = "ReaderAddUrl";
+    public const string READER_REFRESH = "ReaderRefresh";
 
     public class Controller : Object {
         private Reader.Engine.Fetcher fetcher { get; set; default = new Reader.Engine.Fetcher (); }
@@ -39,8 +40,14 @@ namespace Reader {
             	fetcher.add_subscription (val.get_string ());
             });
 
+            var refresh = new SimpleAction (READER_REFRESH, null);
+            refresh.activate.connect (() => {
+                fetcher.refresh_manual ();
+            });
+
             Reader.Application.instance.add_action(show_error);
             Reader.Application.instance.add_action(add_url);
+            Reader.Application.instance.add_action(refresh);
         }
 
         public void show_error (string message) {

@@ -55,8 +55,7 @@ namespace Reader {
                                                 Gtk.IconSize.LARGE_TOOLBAR);
             Gtk.ToolButton refresh = new Gtk.ToolButton (refresh_img, null);
             this.pack_start (refresh);
-            refresh.set_action_name("app." + Reader.READER_ERROR);
-            refresh.set_action_target_value(new Variant.string("Refresh Not implemented"));
+            refresh.set_action_name("app." + Reader.READER_REFRESH);
 
             Gtk.Menu menu = new Gtk.Menu ();
             Gtk.MenuItem import_opml = new Gtk.MenuItem.with_label("Import OPML File");
