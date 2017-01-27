@@ -31,6 +31,7 @@ namespace Reader.Engine {
         }
 
         public override void execute_in_background () {
+            debug ("Fetch RSS Feed: %s", url);
             Soup.Session session = new Soup.Session ();
             Soup.Message msg = new Soup.Message ("GET", url);
             session.send_message (msg);
@@ -39,6 +40,7 @@ namespace Reader.Engine {
                 parser.load_from_data ((string) msg.response_body.data,
                 					   (ulong)  msg.response_body.length);
                 Rss.Document doc = parser.get_document ();
+                
                 if (doc.image_url == null || doc.image_url.length == 0) {
                     var link = doc.link;
                     var file = File.new_for_uri (link);
@@ -52,6 +54,8 @@ namespace Reader.Engine {
                         doc.image_url = link + "favicon.ico";
                     }
                 }
+                
+                check_for_valid_icon (doc);
                 subscription = convertDocument (doc);
                 subscription.feed_url = url;
             } catch (Error e) {
@@ -88,6 +92,11 @@ namespace Reader.Engine {
             }
 
             return sub;
+        }
+        
+        private void check_for_valid_icon (Rss.Document doc) {
+            var file = File.new_for_uri (doc.image_url);
+            doc.image_url = file.get_parent ().get_uri () + file.get_basename ();
         }
 
         public override void execute_in_main () {
